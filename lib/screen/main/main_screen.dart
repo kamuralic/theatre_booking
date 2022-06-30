@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:theatrol/screen/main/home/home_screen.dart';
-import 'package:theatrol/screen/main/transaction/transaction_history_screen.dart';
 
 import '../../services/auth_service.dart';
 import '../../theme.dart';
@@ -18,17 +17,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-  final screens = [
-    const HomeScreen(),
-    TransactionHistoryScreen(),
-    //SettingsScreen(),
-  ];
-
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.currentScreen;
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final authProvider = context.read<AuthService>();
       authProvider.getUserId();
@@ -68,24 +60,6 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       child: const Text(
                         'Home',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Beamer.of(context).beamToNamed('/transactions');
-                      },
-                      child: const Text(
-                        'Transactions',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Beamer.of(context).beamToNamed('/account');
-                      },
-                      child: const Text(
-                        'Account',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -155,29 +129,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         backgroundColor: backgroundColor,
-        body: screens[_currentIndex],
-        bottomNavigationBar: Visibility(
-          visible: false,
-          child: CustomBottomNavBar(
-            defaultSelectedIndex: _currentIndex,
-            selectedItemIcon: const [
-              "assets/icons/home_fill.png",
-              "assets/icons/receipt_fill.png",
-              "assets/icons/settings_fill.png"
-            ],
-            unselectedItemIcon: const [
-              "assets/icons/home_outlined.png",
-              "assets/icons/receipt_outlined.png",
-              "assets/icons/settings_outlined.png"
-            ],
-            label: const ["Home", "Transaction", "Settings"],
-            onChange: (val) {
-              setState(() {
-                _currentIndex = val;
-              });
-            },
-          ),
-        ),
+        body: HomeScreen(),
       ),
     );
   }
@@ -201,113 +153,5 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ) ??
         false;
-  }
-}
-
-class CustomBottomNavBar extends StatefulWidget {
-  final int defaultSelectedIndex;
-  final List<String> selectedItemIcon;
-  final List<String> unselectedItemIcon;
-  final List<String> label;
-  final Function(int) onChange;
-
-  const CustomBottomNavBar(
-      {this.defaultSelectedIndex = 0,
-      required this.selectedItemIcon,
-      required this.unselectedItemIcon,
-      required this.label,
-      required this.onChange});
-
-  @override
-  State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
-}
-
-class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
-  int _selectedIndex = 0;
-  List<String> _selectedItemIcon = [];
-  List<String> _unselectedItemIcon = [];
-  List<String> _label = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.defaultSelectedIndex;
-    _selectedItemIcon = widget.selectedItemIcon;
-    _unselectedItemIcon = widget.unselectedItemIcon;
-    _label = widget.label;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> _navBarItems = [];
-
-    for (int i = 0; i < 3; i++) {
-      _navBarItems.add(bottomNavBarItem(
-          _selectedItemIcon[i], _unselectedItemIcon[i], _label[i], i));
-    }
-    return Container(
-      decoration: const BoxDecoration(
-          color: colorWhite,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: _navBarItems,
-      ),
-    );
-  }
-
-  Widget bottomNavBarItem(activeIcon, inactiveIcon, label, index) {
-    return GestureDetector(
-      onTap: () {
-        widget.onChange(index);
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      child: Container(
-        height: kBottomNavigationBarHeight,
-        width: MediaQuery.of(context).size.width / _selectedItemIcon.length,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius:
-                BorderRadius.vertical(top: Radius.circular(borderRadiusSize))),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _selectedIndex == index
-              ? Container(
-                  decoration: BoxDecoration(
-                      color: primaryColor100,
-                      borderRadius: BorderRadius.circular(borderRadiusSize)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset(
-                        activeIcon,
-                        width: 22,
-                        height: 22,
-                        color: primaryColor500,
-                      ),
-                      Text(
-                        label,
-                        style: bottomNavTextStyle,
-                      )
-                    ],
-                  ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      inactiveIcon,
-                      width: 22,
-                      height: 22,
-                      color: primaryColor300,
-                    ),
-                  ],
-                ),
-        ),
-      ),
-    );
   }
 }

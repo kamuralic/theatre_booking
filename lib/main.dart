@@ -7,10 +7,7 @@ import 'package:theatrol/screen/authentication/login_screen.dart';
 import 'package:theatrol/screen/detail/checkout_screen.dart';
 import 'package:theatrol/screen/detail/detail_screen.dart';
 import 'package:theatrol/screen/main/main_screen.dart';
-import 'package:theatrol/screen/main/setting/settings_screen.dart';
-import 'package:theatrol/screen/main/transaction/transaction_history_screen.dart';
 import 'package:theatrol/screen/post_show_page.dart';
-import 'package:theatrol/screen/search_screen.dart';
 import 'package:theatrol/services/auth_service.dart';
 import 'package:theatrol/services/image_storage.dart';
 import 'package:theatrol/services/images_provider.dart';
@@ -43,7 +40,6 @@ class _MyAppState extends State<MyApp> {
         // Return either Widgets or BeamPages if more customization is needed
         '/': (context, state, data) => MainScreen(),
         '/login': (context, state, data) => const LoginPage(),
-        '/transactions': (context, state, data) => TransactionHistoryScreen(),
         '/add-show': (context, state, data) => const ShowPostPage(),
         // '/account': (context, state, data) => SettingsScreen(),
         // '/shows': (context, state, data) => SearchScreen(
