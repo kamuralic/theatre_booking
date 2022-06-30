@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildListDelegate([
           //Card(child: CategoriesWidget()),
           header(context),
-          TicketCard(),
           Card(
               child: Column(
             children: [

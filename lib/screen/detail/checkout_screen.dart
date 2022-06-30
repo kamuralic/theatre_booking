@@ -31,7 +31,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   int _selectedIndex = -1;
   int? _performanceId;
   String? _selectedPerfomanceName;
-  List<Ticket> tickets = [];
+  bool _isSeatSelected = false;
+  // List<Ticket> tickets = [];
 
   int _totalBill = 0;
 
@@ -168,7 +169,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     height: 32,
                   ),
                   Text(
-                    "Pick A Seat",
+                    "Pick A Seat ( Yellow seats already booked)",
                     style: subTitleTextStyle,
                   ),
                   const SizedBox(
@@ -189,28 +190,33 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               itemBuilder: (context, index) {
                                 Seat seat = notifier.seats![index];
 
+                                List<Ticket> tickets = [];
                                 if (ticketsProvider.isLoaded == true) {
-                                  setState(() {
-                                    tickets = ticketsProvider.tickets!
-                                        .where((element) =>
-                                            element.seatId == seat.id)
-                                        .toList();
-                                  });
+                                  tickets = ticketsProvider.tickets!
+                                      .where((element) =>
+                                          element.seatId == seat.id)
+                                      .toList();
                                 }
 
                                 return InkWell(
-                                  onTap: (() {
-                                    setState(() {
-                                      _selectedSeat = seat;
-                                      _seatErrorMessage = '';
+                                  onTap: tickets.isNotEmpty
+                                      ? null
+                                      : (() {
+                                          setState(() {
+                                            _isSeatSelected = !_isSeatSelected;
+                                            _selectedSeat =
+                                                _isSeatSelected == false
+                                                    ? null
+                                                    : seat;
+                                            _seatErrorMessage = '';
 
-                                      if (_selectedIndex == index) {
-                                        _selectedIndex = -1;
-                                      } else {
-                                        _selectedIndex = index;
-                                      }
-                                    });
-                                  }),
+                                            if (_selectedIndex == index) {
+                                              _selectedIndex = -1;
+                                            } else {
+                                              _selectedIndex = index;
+                                            }
+                                          });
+                                        }),
                                   child: Card(
                                     color: index == _selectedIndex ||
                                             tickets.isNotEmpty
