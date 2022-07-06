@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:theatrol/model/ticket.dart';
-import 'package:theatrol/remote_repository/shows.dart';
 
 import '../remote_repository/tickets.dart';
 

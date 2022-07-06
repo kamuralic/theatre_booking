@@ -11,6 +11,7 @@ class Ticket {
     this.id,
     this.createdAt,
     required this.seatId,
+    required this.showId,
     required this.performanceId,
     required this.userId,
   });
@@ -18,6 +19,7 @@ class Ticket {
   int? id;
   DateTime? createdAt;
   int seatId;
+  int showId;
   int performanceId;
   int userId;
 
@@ -27,10 +29,12 @@ class Ticket {
         seatId: json["seat_id"],
         performanceId: json["performance_id"],
         userId: json["user_id"],
+        showId: json["show_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "seat_id": seatId,
+        "show_id": showId,
         "performance_id": performanceId,
         "user_id": userId,
       };

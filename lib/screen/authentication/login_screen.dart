@@ -203,21 +203,20 @@ class _LoginScreenState extends State<LoginPage> {
 
     return SafeArea(
       child: Scaffold(
-          body: Container(
+          body: SizedBox(
         height: height,
         child: Stack(
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                    child: const Text(
+              children: const [
+                Text(
                   'Theatrol',
                   style: TextStyle(
                       color: primaryColor500,
                       fontSize: 40,
                       fontWeight: FontWeight.bold),
-                )),
+                ),
               ],
             ),
             Container(

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:theatrol/model/performance.dart';
 import 'package:theatrol/model/seat.dart';
 import 'package:theatrol/model/show.dart';
 import 'package:theatrol/model/ticket.dart';
-import 'package:theatrol/remote_repository/performances.dart';
 import 'package:theatrol/services/auth_service.dart';
 import 'package:theatrol/services/performances_service.dart';
 import 'package:theatrol/services/seats_service.dart';
-import 'package:theatrol/widget/loading_button.dart';
 import 'package:theatrol/widget/my_progress_indicator.dart';
 import '../../remote_repository/tickets.dart';
 import '../../services/tickets_service.dart';
 import '../../theme.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  Show show;
+  final Show show;
 
-  CheckoutScreen({Key? key, required this.show}) : super(key: key);
+  const CheckoutScreen({Key? key, required this.show}) : super(key: key);
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -158,12 +155,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 });
                               },
                             )
-                          : MyCircularProgressIndicator(),
+                          : const MyCircularProgressIndicator(),
                     );
                   }),
                   Text(
                     _performanceTypeErrorMessage,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                   const SizedBox(
                     height: 32,
@@ -191,10 +188,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 Seat seat = notifier.seats![index];
 
                                 List<Ticket> tickets = [];
-                                if (ticketsProvider.isLoaded == true) {
+                                if (ticketsProvider.isLoaded == true &&
+                                    _performanceId != null) {
                                   tickets = ticketsProvider.tickets!
                                       .where((element) =>
-                                          element.seatId == seat.id)
+                                          element.seatId == seat.id &&
+                                          element.showId == widget.show.id &&
+                                          element.performanceId ==
+                                              _performanceId)
                                       .toList();
                                 }
 
@@ -307,36 +308,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           remoteTicketsService.createTicket(
                               seatId: _selectedSeat!.id!,
                               performanceId: _performanceId!,
-                              userId: authProvider.userIdPrefs!);
+                              userId: authProvider.userIdPrefs!,
+                              showId: widget.show.id!);
                           setState(() {
                             isLoading = false;
                           });
                           _showSnackBar(
                               context, 'Successfully Booked A theatre seat');
                         } //!_enableCreateOrderBtn
-                  //     ? null
-                  //     : () {
-                  //         List<String> selectedTime = [];
-                  //         for (int i = 0; i < availableBookTime.length; i++) {
-                  //           if (availableBookTime[i].value) {
-                  //             selectedTime.add(availableBookTime[i].title);
-                  //           }
-                  //         }
-                  //         dummyUserOrderList.add(FieldOrder(
-                  //             field: widget.field,
-                  //             user: sampleUser,
-                  //             selectedDate:
-                  //                 dateFormat.format(_dateTime).toString(),
-                  //             selectedTime: selectedTime));
-                  //         Navigator.pushAndRemoveUntil(
-                  //             context,
-                  //             MaterialPageRoute(
-                  //                 builder: (context) =>
-                  //                     MainScreen(currentScreen: 1)),
-                  //             (route) => false);
-                  //         _showSnackBar(
-                  //             context, "Successfully create an order");
-                  //       },
+
                   ,
                   child: Text(
                     isLoading == true ? "Loading..." : "Create Order",

@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class RemoteTicketsService {
   Future<Ticket> createTicket({
+    required int showId,
     required int seatId,
     required int performanceId,
     required int userId,
@@ -16,6 +17,7 @@ class RemoteTicketsService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
+        "show_id": showId,
         "seat_id": seatId,
         "performance_id": performanceId,
         "user_id": userId,
